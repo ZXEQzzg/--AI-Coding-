@@ -1,6 +1,12 @@
 # 🏡 合租生活管家 (CoLiving Hub)
 
-[img](img.png)
+## 🔗 在线体验 (Live Demo)
+
+### 👉 **https://zxeqzzg.github.io/--AI-Coding-/**
+
+> 已部署至 GitHub Pages：公开可访问、长期有效、无需申请权限，可在同一域名下持续迭代更新。
+
+![合租生活管家 · 界面预览](./img.png)
 
 > 面向毕业季合租青年与都市青年的智能协同生活管理平台。
 > 让合租不再有尴尬催账、推诿打扫与公用物资短缺，打造充满温度、秩序与尊重的合租生活空间。
@@ -104,8 +110,8 @@
 
 ### 1. 克隆代码与进入目录
 ```bash
-git clone <repository-url>
-cd coliving-hub
+git clone https://github.com/ZXEQzzg/--AI-Coding-.git
+cd --AI-Coding-
 ```
 
 ### 2. 安装依赖

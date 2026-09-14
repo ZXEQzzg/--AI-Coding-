@@ -1,0 +1,8 @@
+{
+  "name": "合租生活管家",
+  "description": "面向毕业季合租年轻人的智能协同生活管家，提供账单AA分摊、清洁轮值排班、公共物资补给预警、合租公约协商与管理员房屋治理看板。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

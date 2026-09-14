@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>合租生活管家</title>
+    <meta name="description" content="面向毕业季合租年轻人的智能协同生活管家，提供账单AA分摊、清洁轮值排班、公共物资补给预警、合租公约协商与管理员房屋治理看板。" />
+    <meta property="og:title" content="合租生活管家" />
+    <meta property="og:description" content="面向毕业季合租年轻人的智能协同生活管家，提供账单AA分摊、清洁轮值排班、公共物资补给预警、合租公约协商与管理员房屋治理看板。" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('coliving_theme');
+          if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-[#FDFBF7] dark:bg-[#1C1917] text-[#2C2218] dark:text-[#F5F5F4] antialiased selection:bg-[#E8DDCB] selection:text-[#2C2218]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Roommate, CleaningDuty } from '../types';
+import { Language, i18n, formatDutyArea, formatDayOfWeek } from '../utils/i18n';
 import { X, ArrowRightLeft } from 'lucide-react';
 
 interface SwapDutyModalProps {
@@ -8,6 +9,7 @@ interface SwapDutyModalProps {
   duty: CleaningDuty | null;
   roommates: Roommate[];
   currentUserId: string;
+  lang: Language;
   onSubmitSwap: (dutyId: string, toId: string, reason: string) => void;
 }
 
@@ -17,13 +19,16 @@ export const SwapDutyModal: React.FC<SwapDutyModalProps> = ({
   duty,
   roommates,
   currentUserId,
+  lang,
   onSubmitSwap,
 }) => {
   if (!isOpen || !duty) return null;
 
+  const t = i18n[lang];
+
   const otherRoommates = roommates.filter((r) => r.id !== currentUserId);
   const [targetId, setTargetId] = useState(otherRoommates[0]?.id || '');
-  const [reason, setReason] = useState('临时需要加班/出差，想和你的值日排班对调一下~');
+  const [reason, setReason] = useState(t.defaultSwapReason);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,37 +39,37 @@ export const SwapDutyModal: React.FC<SwapDutyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-stone-200 animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+      <div className="bg-white dark:bg-[#292524] rounded-2xl max-w-md w-full p-6 shadow-xl border border-[#E8E1D5] dark:border-stone-700 animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E8E1D5] dark:border-stone-700">
           <div className="flex items-center space-x-2">
-            <span className="p-2 rounded-xl bg-stone-100 text-stone-900">
+            <span className="p-2 rounded-xl bg-[#FAF7F2] dark:bg-stone-800 text-[#8B5E3C] dark:text-amber-400">
               <ArrowRightLeft className="w-5 h-5" />
             </span>
-            <h3 className="text-base font-bold text-stone-900">申请清洁值日换班</h3>
+            <h3 className="text-base font-bold text-[#2C2218] dark:text-[#F5F5F4]">{t.swapDutyModalTitle}</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100"
+            className="p-1 rounded-lg text-[#796B5B] dark:text-stone-400 hover:text-[#2C2218] dark:hover:text-stone-100 hover:bg-[#FAF7F2] dark:hover:bg-stone-800"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="mt-4 p-3 bg-stone-50 rounded-xl text-xs text-stone-700 border border-stone-200">
-          <strong>当前值日任务：</strong> {duty.date} ({duty.dayOfWeek}) · {duty.areaName}
+        <div className="mt-4 p-3 bg-[#FAF7F2] dark:bg-stone-900 rounded-xl text-xs text-[#5C4D3C] dark:text-stone-300 border border-[#E8E1D5] dark:border-stone-800">
+          <strong className="text-[#2C2218] dark:text-[#F5F5F4]">{t.currentDutyLabel}</strong> {duty.date} ({formatDayOfWeek(duty.dayOfWeek, lang)}) · {formatDutyArea(duty.area, lang)}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              向哪位室友申请对调？
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.requestSwapTargetLabel}
             </label>
             <select
               value={targetId}
               onChange={(e) => setTargetId(e.target.value)}
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             >
               {otherRoommates.map((r) => (
                 <option key={r.id} value={r.id}>
@@ -75,31 +80,31 @@ export const SwapDutyModal: React.FC<SwapDutyModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              换班说明事由
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.swapReasonLabel}
             </label>
             <textarea
               rows={3}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="说明换班原因..."
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+              placeholder={t.swapReasonPlaceholder}
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-4 border-t border-stone-100">
+          <div className="flex items-center justify-end space-x-2 pt-4 border-t border-[#E8E1D5] dark:border-stone-700">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-stone-200 text-xs font-medium text-stone-600 hover:bg-stone-50"
+              className="px-4 py-2 rounded-xl border border-[#E8E1D5] dark:border-stone-700 text-xs font-medium text-[#796B5B] dark:text-stone-300 hover:bg-[#FAF7F2] dark:hover:bg-stone-800"
             >
-              取消
+              {t.cancel}
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-xs"
+              className="px-5 py-2 rounded-xl bg-[#8B5E3C] hover:bg-[#724A2D] text-white text-xs font-semibold shadow-xs"
             >
-              发送换班申请
+              {t.sendSwapRequestBtn}
             </button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Roommate, SharedItem, StockLevel } from '../types';
+import { Language, i18n, formatSupplyCategory } from '../utils/i18n';
 import { X, Package } from 'lucide-react';
 
 interface AddSupplyModalProps {
@@ -7,6 +8,7 @@ interface AddSupplyModalProps {
   onClose: () => void;
   roommates: Roommate[];
   currentUserId: string;
+  lang: Language;
   onAddSupply: (item: Omit<SharedItem, 'id'>) => void;
 }
 
@@ -15,9 +17,12 @@ export const AddSupplyModal: React.FC<AddSupplyModalProps> = ({
   onClose,
   roommates,
   currentUserId,
+  lang,
   onAddSupply,
 }) => {
   if (!isOpen) return null;
+
+  const t = i18n[lang];
 
   const [name, setName] = useState('');
   const [category, setCategory] = useState<'cleaning' | 'daily' | 'kitchen' | 'bathroom'>('daily');
@@ -49,19 +54,19 @@ export const AddSupplyModal: React.FC<AddSupplyModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-stone-200 animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+      <div className="bg-white dark:bg-[#292524] rounded-2xl max-w-md w-full p-6 shadow-xl border border-[#E8E1D5] dark:border-stone-700 animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E8E1D5] dark:border-stone-700">
           <div className="flex items-center space-x-2">
-            <span className="p-2 rounded-xl bg-stone-100 text-stone-900">
+            <span className="p-2 rounded-xl bg-[#FAF7F2] dark:bg-stone-800 text-[#8B5E3C] dark:text-amber-400">
               <Package className="w-5 h-5" />
             </span>
-            <h3 className="text-base font-bold text-stone-900">登记公共物资物品</h3>
+            <h3 className="text-base font-bold text-[#2C2218] dark:text-[#F5F5F4]">{t.addSupplyModalTitle}</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100"
+            className="p-1 rounded-lg text-[#796B5B] dark:text-stone-400 hover:text-[#2C2218] dark:hover:text-stone-100 hover:bg-[#FAF7F2] dark:hover:bg-stone-800"
           >
             <X className="w-5 h-5" />
           </button>
@@ -69,69 +74,69 @@ export const AddSupplyModal: React.FC<AddSupplyModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              物品名称及规格 *
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.supplyNameLabel}
             </label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="例：心相印4层卫生卷纸、洗洁精替换装..."
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+              placeholder={t.supplyNamePlaceholder}
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                物品品类
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.supplyCategoryLabel}
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+                className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               >
-                <option value="daily">生活日用</option>
-                <option value="bathroom">卫浴消耗</option>
-                <option value="kitchen">厨房耗材</option>
-                <option value="cleaning">清洁工具配件</option>
+                <option value="daily">{formatSupplyCategory('daily', lang)}</option>
+                <option value="bathroom">{formatSupplyCategory('bathroom', lang)}</option>
+                <option value="kitchen">{formatSupplyCategory('kitchen', lang)}</option>
+                <option value="cleaning">{formatSupplyCategory('cleaning', lang)}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                当前储量状态
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.stockStatusLabel}
               </label>
               <select
                 value={stockLevel}
                 onChange={(e) => setStockLevel(e.target.value as StockLevel)}
-                className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+                className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               >
-                <option value="plenty">充足 (绿色)</option>
-                <option value="low">告急 (橙黄色预警)</option>
-                <option value="empty">已断货 (红色警报)</option>
+                <option value="plenty">{t.stockLevelPlenty}</option>
+                <option value="low">{t.stockLevelLow}</option>
+                <option value="empty">{t.stockLevelEmpty}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                当前剩余描述
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.quantityRemainingLabel}
               </label>
               <input
                 type="text"
                 value={quantityDescription}
                 onChange={(e) => setQuantityDescription(e.target.value)}
                 placeholder="例：剩 2 卷、余半瓶..."
-                className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+                className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                参考采购价格 (元)
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.estimatedPriceLabel}
               </label>
               <input
                 type="number"
@@ -139,51 +144,51 @@ export const AddSupplyModal: React.FC<AddSupplyModalProps> = ({
                 value={estimatedPrice}
                 onChange={(e) => setEstimatedPrice(e.target.value)}
                 placeholder="25.0"
-                className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+                className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              全屋公共存放位置
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.storageLocationLabel}
             </label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="例：次卧洗手间镜柜下层、水槽下方置物篮..."
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              选购推荐或特别提醒（选填）
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.notesOptionalLabel}
             </label>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="例：尽量买无香款，大家不易过敏..."
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white"
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-4 border-t border-stone-100">
+          <div className="flex items-center justify-end space-x-2 pt-4 border-t border-[#E8E1D5] dark:border-stone-700">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-stone-200 text-xs font-medium text-stone-600 hover:bg-stone-50"
+              className="px-4 py-2 rounded-xl border border-[#E8E1D5] dark:border-stone-700 text-xs font-medium text-[#796B5B] dark:text-stone-300 hover:bg-[#FAF7F2] dark:hover:bg-stone-800"
             >
-              取消
+              {t.cancel}
             </button>
             <button
               type="submit"
               id="submit-supply-btn"
-              className="px-5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-xs"
+              className="px-5 py-2 rounded-xl bg-[#8B5E3C] hover:bg-[#724A2D] text-white text-xs font-semibold shadow-xs"
             >
-              保存物资
+              {t.saveSupplyBtn}
             </button>
           </div>
         </form>

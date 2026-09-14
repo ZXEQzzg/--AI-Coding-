@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
@@ -29,14 +30,25 @@
     --accent-amber: #F59E0B;
   }
 
-  html.dark,
-  body.dark {
+  html {
+    background-color: #FDFBF7;
+    color: #2C2218;
+  }
+
+  html.dark {
     background-color: #1C1917;
     color: #F5F5F4;
   }
 
   body {
+    background-color: #FDFBF7;
+    color: #2C2218;
     font-family: 'Plus Jakarta Sans', 'Noto Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  body.dark {
+    background-color: #1C1917;
+    color: #F5F5F4;
   }
 }

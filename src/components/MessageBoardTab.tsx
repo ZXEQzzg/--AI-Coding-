@@ -183,8 +183,12 @@ export const MessageBoardTab: React.FC<MessageBoardTabProps> = ({
               rows={3}
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="写下你想和室友分享的生活留言、借物需求、或者温馨夸夸..."
-              className="w-full rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FDFBF7] dark:bg-stone-900 px-3.5 py-2.5 text-sm text-[#2C2218] dark:text-stone-100 placeholder-[#A89F91] focus:border-[#8B5E3C] focus:outline-none focus:ring-1 focus:ring-[#8B5E3C]"
+              placeholder={
+                lang === 'en'
+                  ? 'Share your daily thoughts, borrow needs, or warm praise with roommates...'
+                  : '写下你想和室友分享的生活留言、借物需求、或者温馨夸夸...'
+              }
+              className="w-full rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FDFBF7] dark:bg-stone-900 px-3.5 py-2.5 text-sm text-[#2C2218] dark:text-stone-100 placeholder-[#A89F91] focus:border-[#8B5E3C] focus:outline-hidden focus:ring-1 focus:ring-[#8B5E3C]"
             />
           </div>
 
@@ -204,7 +208,7 @@ export const MessageBoardTab: React.FC<MessageBoardTabProps> = ({
                 type="text"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                placeholder="标签（如: 拼饭, 螺丝刀 空格分隔）"
+                placeholder={lang === 'en' ? 'Tags (space or comma separated)' : '标签（如: 拼饭, 螺丝刀 空格分隔）'}
                 className="text-xs bg-[#FDFBF7] dark:bg-stone-900 border border-[#E8E1D5] dark:border-stone-700 rounded-lg px-2.5 py-1 text-[#2C2218] dark:text-stone-200 placeholder-[#A89F91] w-48"
               />
             </div>
@@ -369,7 +373,7 @@ export const MessageBoardTab: React.FC<MessageBoardTabProps> = ({
                           : 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100'
                       }`}
                     >
-                      {isResolved ? '撤销已解决' : t.markResolved}
+                      {isResolved ? (lang === 'en' ? 'Undo Resolved' : '撤销已解决') : t.markResolved}
                     </button>
                   )}
                 </div>
@@ -412,14 +416,14 @@ export const MessageBoardTab: React.FC<MessageBoardTabProps> = ({
                       type="text"
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="回复这条留言..."
+                      placeholder={lang === 'en' ? 'Reply to this message...' : '回复这条留言...'}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
                           handleSendReply(msg.id);
                         }
                       }}
-                      className="flex-1 text-xs bg-[#FAF7F2] dark:bg-stone-900 border border-[#E8E1D5] dark:border-stone-700 rounded-xl px-3 py-1.5 text-[#2C2218] dark:text-stone-100 placeholder-[#A89F91] focus:outline-none focus:border-[#8B5E3C]"
+                      className="flex-1 text-xs bg-[#FAF7F2] dark:bg-stone-900 border border-[#E8E1D5] dark:border-stone-700 rounded-xl px-3 py-1.5 text-[#2C2218] dark:text-stone-100 placeholder-[#A89F91] focus:outline-hidden focus:border-[#8B5E3C]"
                     />
                     <button
                       type="button"

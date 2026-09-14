@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
 import { Roommate, CleaningDuty } from '../types';
+import { Language, i18n } from '../utils/i18n';
 import {
-  Sparkles,
   Calendar,
   CheckCircle2,
   Clock,
   ArrowRightLeft,
-  Flame,
   Award,
-  Plus,
   Check,
   X,
-  AlertCircle,
-  ChevronRight,
-  ShieldCheck,
 } from 'lucide-react';
 
 interface CleaningTabProps {
   roommates: Roommate[];
   duties: CleaningDuty[];
   currentUserId: string;
+  lang: Language;
   onToggleDutyItem: (dutyId: string, itemIdx: number) => void;
   onCompleteDuty: (dutyId: string, notes?: string) => void;
   onRequestSwap: (dutyId: string) => void;
@@ -31,22 +27,48 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
   roommates,
   duties,
   currentUserId,
+  lang,
   onToggleDutyItem,
   onCompleteDuty,
   onRequestSwap,
   onRespondSwap,
   onGenerateWeeklyRoster,
 }) => {
+  const t = i18n[lang];
   const [selectedDutyForNotes, setSelectedDutyForNotes] = useState<string | null>(null);
   const [dutyNotesText, setDutyNotesText] = useState<string>('');
 
   const todayStr = '2026-09-12';
-  const currentUser = roommates.find((r) => r.id === currentUserId) || roommates[0];
-
-  // Group duties by date / upcoming
   const todayDuties = duties.filter((d) => d.date === todayStr);
-  const upcomingDuties = duties.filter((d) => d.date > todayStr);
-  const pastDuties = duties.filter((d) => d.date < todayStr);
+
+  const formatAreaName = (area: string) => {
+    if (lang === 'zh') return area;
+    const map: Record<string, string> = {
+      '厨房与餐厅': 'Kitchen & Dining',
+      '公共卫生间': 'Shared Bathroom',
+      '客厅与玄关': 'Living Room & Entryway',
+      '生活阳台与垃圾角': 'Balcony & Waste Corner',
+      '厨房': 'Kitchen',
+      '公卫': 'Bathroom',
+      '客厅': 'Living Room',
+      '阳台': 'Balcony',
+    };
+    return map[area] || area;
+  };
+
+  const formatDayOfWeek = (day: string) => {
+    if (lang === 'zh') return day;
+    const map: Record<string, string> = {
+      '周一': 'Mon',
+      '周二': 'Tue',
+      '周三': 'Wed',
+      '周四': 'Thu',
+      '周五': 'Fri',
+      '周六': 'Sat',
+      '周日': 'Sun',
+    };
+    return map[day] || day;
+  };
 
   // Calculate clean scores for roommates
   const stats = roommates.map((r) => {
@@ -68,13 +90,13 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E8E1D5] dark:border-stone-700">
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold text-[#2C2218] dark:text-[#F5F5F4]">公共区域清洁轮值排班</h2>
+              <h2 className="text-xl font-bold text-[#2C2218] dark:text-[#F5F5F4]">{t.cleaningTabMainTitle}</h2>
               <span className="text-xs bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 font-medium">
-                公平轮换 · 责任到人
+                {t.fairRotationBadge}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-[#796B5B] dark:text-stone-400 mt-1">
-              每周公区深度保洁自动按室友轮替，支持临时有事无感换班
+              {t.cleaningTabSubtitle}
             </p>
           </div>
 
@@ -86,7 +108,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
               className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-[#FAF7F2] dark:bg-stone-800 hover:bg-[#F4EFE6] dark:hover:bg-stone-700 border border-[#E8E1D5] dark:border-stone-700 text-[#796B5B] dark:text-stone-200 text-xs sm:text-sm font-medium transition-colors"
             >
               <Calendar className="w-4 h-4 text-[#8B5E3C] dark:text-amber-400" />
-              <span>轮转下周排班</span>
+              <span>{t.rotateNextWeek}</span>
             </button>
           </div>
         </div>
@@ -95,7 +117,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
         <div className="pt-4">
           <div className="flex items-center space-x-1.5 text-xs font-semibold text-[#796B5B] dark:text-stone-300 mb-3">
             <Award className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-            <span>合租卫生恪守与打卡荣誉榜</span>
+            <span>{t.cleaningHonorTitle}</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {stats.map(({ roommate, completed, rate }) => (
@@ -112,11 +134,11 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                   <div className="text-xs font-bold text-[#2C2218] dark:text-stone-100 flex items-center space-x-1">
                     <span>{roommate.name}</span>
                     {roommate.id === currentUserId && (
-                      <span className="text-[10px] text-[#796B5B] dark:text-stone-400 font-normal">(你)</span>
+                      <span className="text-[10px] text-[#796B5B] dark:text-stone-400 font-normal">({t.you})</span>
                     )}
                   </div>
                   <div className="text-[11px] text-[#796B5B] dark:text-stone-400">
-                    打卡率 <strong className="text-emerald-700 dark:text-emerald-400">{rate}%</strong> ({completed}次)
+                    {t.checkinRate} <strong className="text-emerald-700 dark:text-emerald-400">{rate}%</strong> ({completed} {t.times})
                   </div>
                 </div>
               </div>
@@ -148,17 +170,17 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                     <div>
                       <div className="flex items-center space-x-2">
                         <span className="text-xs font-bold text-amber-900 dark:text-amber-300">
-                          值日换班申请
+                          {t.swapDutyAlert}
                         </span>
                         <span className="text-xs text-amber-700 dark:text-amber-400">
-                          {from?.name} ➡️ 请求与 {to?.name} 对调
+                          {from?.name} ➡️ {t.requestSwapWith} {to?.name} {t.swapAction}
                         </span>
                       </div>
                       <p className="text-xs text-[#2C2218] dark:text-stone-200 mt-1">
-                        原值日：<strong>{duty.date} ({duty.dayOfWeek}) · {duty.areaName}</strong>
+                        {t.originalDuty}<strong>{duty.date} ({formatDayOfWeek(duty.dayOfWeek)}) · {formatAreaName(duty.areaName)}</strong>
                       </p>
                       <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-0.5">
-                        换班原因：“{req.reason}”
+                        {t.swapReason}“{req.reason}”
                       </p>
                     </div>
                   </div>
@@ -172,7 +194,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                         className="px-3 py-1.5 rounded-xl bg-[#8B5E3C] hover:bg-[#724A2D] text-white text-xs font-semibold flex items-center space-x-1"
                       >
                         <Check className="w-3.5 h-3.5" />
-                        <span>同意对调</span>
+                        <span>{t.agreeSwap}</span>
                       </button>
                       <button
                         type="button"
@@ -181,12 +203,12 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                         className="px-3 py-1.5 rounded-xl bg-white dark:bg-stone-800 border border-[#E8E1D5] dark:border-stone-700 text-[#796B5B] dark:text-stone-300 text-xs font-medium hover:bg-[#FAF7F2] dark:hover:bg-stone-700 flex items-center space-x-1"
                       >
                         <X className="w-3.5 h-3.5" />
-                        <span>婉拒</span>
+                        <span>{t.declineSwap}</span>
                       </button>
                     </div>
                   ) : (
                     <span className="text-xs text-amber-800 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-900/40 px-2.5 py-1 rounded-full shrink-0">
-                      等待 {to?.name} 确认中
+                      {lang === 'en' ? `Waiting for ${to?.name} to confirm` : `等待 ${to?.name} 确认中`}
                     </span>
                   )}
                 </div>
@@ -201,11 +223,11 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#8B5E3C] dark:bg-amber-400" />
             <h3 className="font-bold text-[#2C2218] dark:text-[#F5F5F4] text-base">
-              今日保洁执行 ({todayStr} 周六)
+              {t.todayCleaningExecution} ({todayStr} {lang === 'en' ? 'Sat' : '周六'})
             </h3>
           </div>
           <span className="text-xs text-[#796B5B] dark:text-stone-400">
-            {todayDuties.filter((d) => d.status === 'completed').length} / {todayDuties.length} 项已打卡
+            {todayDuties.filter((d) => d.status === 'completed').length} / {todayDuties.length} {t.itemsCheckedIn}
           </span>
         </div>
 
@@ -236,16 +258,16 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                     <div>
                       <div className="flex items-center space-x-2">
                         <span className="font-bold text-[#2C2218] dark:text-stone-100 text-sm">
-                          {duty.areaName}
+                          {formatAreaName(duty.areaName)}
                         </span>
                         {isMe && (
                           <span className="text-[11px] bg-[#8B5E3C] text-white px-2 py-0.2 rounded-full font-medium">
-                            你值班
+                            {t.youOnDuty}
                           </span>
                         )}
                       </div>
                       <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-0.5">
-                        值日人：{assignee?.name} ({assignee?.roomName.split(' ')[0]})
+                        {t.dutyPersonLabel}{assignee?.name} ({assignee?.roomName.split(' ')[0]})
                       </p>
                     </div>
                   </div>
@@ -254,17 +276,17 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                     {duty.status === 'completed' ? (
                       <span className="inline-flex items-center space-x-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
                         <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>已完成打卡</span>
+                        <span>{t.checkinDoneBadge}</span>
                       </span>
                     ) : (
                       <button
                         type="button"
                         onClick={() => onRequestSwap(duty.id)}
                         className="p-1.5 text-[#796B5B] dark:text-stone-400 hover:text-[#2C2218] dark:hover:text-stone-200 hover:bg-[#FAF7F2] dark:hover:bg-stone-700 rounded-lg text-xs flex items-center space-x-1"
-                        title="临时有事，申请与室友对调"
+                        title={t.swapTooltip}
                       >
                         <ArrowRightLeft className="w-3.5 h-3.5" />
-                        <span className="text-[11px]">申请换班</span>
+                        <span className="text-[11px]">{t.applySwapButton}</span>
                       </button>
                     )}
                   </div>
@@ -273,7 +295,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                 {/* Checklist items */}
                 <div className="space-y-2 pt-2 border-t border-[#E8E1D5] dark:border-stone-700">
                   <div className="text-[11px] font-medium text-[#796B5B] dark:text-stone-400">
-                    保洁打卡细项（{completedCount}/{duty.checklist.length}）：
+                    {t.cleaningChecklistSub}（{completedCount}/{duty.checklist.length}）：
                   </div>
                   {duty.checklist.map((item, idx) => (
                     <label
@@ -305,7 +327,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                       }}
                       className="text-xs text-[#796B5B] dark:text-stone-400 hover:text-[#2C2218] dark:hover:text-stone-200 underline"
                     >
-                      {selectedDutyForNotes === duty.id ? '取消备注' : '+ 添加保洁备注说明'}
+                      {selectedDutyForNotes === duty.id ? t.cancelNote : t.addCleaningNote}
                     </button>
 
                     <button
@@ -318,7 +340,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                       }}
                       className="px-4 py-1.5 rounded-xl bg-[#8B5E3C] hover:bg-[#724A2D] text-white text-xs font-semibold shadow-xs"
                     >
-                      确认已搞定打卡
+                      {t.confirmDoneCheckin}
                     </button>
                   </div>
                 )}
@@ -330,7 +352,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                       type="text"
                       value={dutyNotesText}
                       onChange={(e) => setDutyNotesText(e.target.value)}
-                      placeholder="例：垃圾已扔下楼、洗手台已用消毒湿巾擦干净..."
+                      placeholder={t.notePlaceholder}
                       className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-800 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:ring-1 focus:ring-[#8B5E3C]"
                     />
                   </div>
@@ -338,7 +360,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
 
                 {duty.completedNotes && (
                   <div className="mt-3 text-xs text-[#796B5B] dark:text-stone-300 bg-[#FAF7F2] dark:bg-stone-800/80 p-2.5 rounded-lg border border-[#E8E1D5] dark:border-stone-700">
-                    💬 打卡附言：{duty.completedNotes}
+                    {t.checkinPostscript}{duty.completedNotes}
                   </div>
                 )}
               </div>
@@ -350,18 +372,18 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
       {/* Upcoming & History Roster Table */}
       <div className="bg-white dark:bg-[#292524] rounded-2xl p-5 sm:p-6 border border-[#E8E1D5] dark:border-stone-700 shadow-xs">
         <h3 className="font-bold text-[#2C2218] dark:text-[#F5F5F4] text-base mb-4">
-          排班轮替日程（近期安排与历史记录）
+          {t.rosterScheduleTitle}
         </h3>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
               <tr className="border-b border-[#E8E1D5] dark:border-stone-700 text-[#796B5B] dark:text-stone-400 font-medium">
-                <th className="py-2.5 px-3">日期与星期</th>
-                <th className="py-2.5 px-3">负责区域</th>
-                <th className="py-2.5 px-3">排班值日生</th>
-                <th className="py-2.5 px-3">完成状态</th>
-                <th className="py-2.5 px-3 text-right">操作</th>
+                <th className="py-2.5 px-3">{t.dateAndWeekday}</th>
+                <th className="py-2.5 px-3">{t.areaCol}</th>
+                <th className="py-2.5 px-3">{t.assigneeCol}</th>
+                <th className="py-2.5 px-3">{t.statusCol}</th>
+                <th className="py-2.5 px-3 text-right">{t.actionCol}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E8E1D5]/60 dark:divide-stone-700">
@@ -379,16 +401,16 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                     <td className="py-3 px-3">
                       <div className="flex items-center space-x-1.5">
                         <span className="text-[#2C2218] dark:text-stone-100 font-semibold">{duty.date}</span>
-                        <span className="text-[#796B5B] dark:text-stone-400">({duty.dayOfWeek})</span>
+                        <span className="text-[#796B5B] dark:text-stone-400">({formatDayOfWeek(duty.dayOfWeek)})</span>
                         {isToday && (
                           <span className="bg-[#8B5E3C] text-white text-[10px] px-1.5 py-0.2 rounded font-medium">
-                            今日
+                            {t.todayBadge}
                           </span>
                         )}
                       </div>
                     </td>
                     <td className="py-3 px-3">
-                      <span className="font-semibold text-[#2C2218] dark:text-stone-200">{duty.areaName}</span>
+                      <span className="font-semibold text-[#2C2218] dark:text-stone-200">{formatAreaName(duty.areaName)}</span>
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center space-x-2">
@@ -400,7 +422,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                         <span className="text-[#2C2218] dark:text-stone-200">{assignee?.name}</span>
                         {duty.assigneeId === currentUserId && (
                           <span className="text-[10px] text-[#796B5B] dark:text-stone-400 bg-[#FAF7F2] dark:bg-stone-800 px-1 rounded border border-[#E8E1D5] dark:border-stone-700">
-                            你
+                            {t.you}
                           </span>
                         )}
                       </div>
@@ -408,11 +430,11 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                     <td className="py-3 px-3">
                       {duty.status === 'completed' ? (
                         <span className="inline-flex items-center text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full text-[11px] border border-emerald-200 dark:border-emerald-800">
-                          <CheckCircle2 className="w-3 h-3 mr-1" /> 已完成
+                          <CheckCircle2 className="w-3 h-3 mr-1" /> {t.doneBadge}
                         </span>
                       ) : (
                         <span className="inline-flex items-center text-[#796B5B] dark:text-stone-400 bg-[#FAF7F2] dark:bg-stone-800 px-2 py-0.5 rounded-full text-[11px] border border-[#E8E1D5] dark:border-stone-700">
-                          <Clock className="w-3 h-3 mr-1 text-[#A89F91] dark:text-stone-500" /> 待值日
+                          <Clock className="w-3 h-3 mr-1 text-[#A89F91] dark:text-stone-500" /> {t.pendingDutyBadge}
                         </span>
                       )}
                     </td>
@@ -423,7 +445,7 @@ export const CleaningTab: React.FC<CleaningTabProps> = ({
                           onClick={() => onRequestSwap(duty.id)}
                           className="text-[#8B5E3C] dark:text-amber-400 hover:text-[#724A2D] dark:hover:text-amber-300 font-medium text-xs hover:underline"
                         >
-                          申请换班
+                          {t.applySwapButton}
                         </button>
                       )}
                     </td>

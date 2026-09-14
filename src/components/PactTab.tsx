@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Roommate, HouseRule, RuleProposal, GentleReminder } from '../types';
+import { Language, i18n } from '../utils/i18n';
 import {
   FileCheck2,
   Moon,
@@ -13,12 +14,8 @@ import {
   MessageSquareHeart,
   Heart,
   CheckCircle2,
-  AlertCircle,
-  HelpCircle,
   Smile,
   ShieldCheck,
-  Send,
-  Lock,
 } from 'lucide-react';
 
 interface PactTabProps {
@@ -27,6 +24,7 @@ interface PactTabProps {
   proposals: RuleProposal[];
   reminders: GentleReminder[];
   currentUserId: string;
+  lang: Language;
   onOpenNewProposal: () => void;
   onOpenPostReminder: () => void;
   onVoteProposal: (proposalId: string, agree: boolean) => void;
@@ -50,6 +48,7 @@ export const PactTab: React.FC<PactTabProps> = ({
   proposals,
   reminders,
   currentUserId,
+  lang,
   onOpenNewProposal,
   onOpenPostReminder,
   onVoteProposal,
@@ -57,9 +56,8 @@ export const PactTab: React.FC<PactTabProps> = ({
   onLikeReminder,
   onResolveReminder,
 }) => {
+  const t = i18n[lang];
   const [activeSubTab, setActiveSubTab] = useState<'rules' | 'proposals' | 'reminders'>('rules');
-
-  const currentUser = roommates.find((r) => r.id === currentUserId) || roommates[0];
 
   return (
     <div className="space-y-6">
@@ -68,13 +66,13 @@ export const PactTab: React.FC<PactTabProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E8E1D5] dark:border-stone-700">
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold text-[#2C2218] dark:text-[#F5F5F4]">室友生活公约与温和沟通</h2>
+              <h2 className="text-xl font-bold text-[#2C2218] dark:text-[#F5F5F4]">{t.pactsTabTitle}</h2>
               <span className="text-xs bg-[#FAF7F2] dark:bg-stone-800 text-[#796B5B] dark:text-stone-300 px-2.5 py-0.5 rounded-full border border-[#E8E1D5] dark:border-stone-700 font-medium">
-                互相体谅 · 和谐共处
+                {t.pactsTabSub}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-[#796B5B] dark:text-stone-400 mt-1">
-              通过成文公约、全员投票表决与友善便签墙，化解生活习惯差异与合租摩擦
+              {t.pactsTabDesc}
             </p>
           </div>
 
@@ -86,7 +84,7 @@ export const PactTab: React.FC<PactTabProps> = ({
               className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-[#FAF7F2] dark:bg-stone-800 hover:bg-[#F4EFE6] dark:hover:bg-stone-700 border border-[#E8E1D5] dark:border-stone-700 text-[#796B5B] dark:text-stone-200 text-xs sm:text-sm font-medium transition-colors"
             >
               <MessageSquareHeart className="w-4 h-4 text-[#8B5E3C] dark:text-amber-400" />
-              <span>写温馨便签</span>
+              <span>{t.writeWarmNote}</span>
             </button>
 
             <button
@@ -96,7 +94,7 @@ export const PactTab: React.FC<PactTabProps> = ({
               className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-[#8B5E3C] hover:bg-[#724A2D] text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs"
             >
               <Plus className="w-4 h-4" />
-              <span>发起新公约提案</span>
+              <span>{t.initiateNewProposal}</span>
             </button>
           </div>
         </div>
@@ -113,7 +111,7 @@ export const PactTab: React.FC<PactTabProps> = ({
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>已生效正式公约 ({pacts.length})</span>
+            <span>{t.effectiveRules} ({pacts.length})</span>
           </button>
 
           <button
@@ -126,7 +124,7 @@ export const PactTab: React.FC<PactTabProps> = ({
             }`}
           >
             <Users className="w-4 h-4" />
-            <span>提案表决中 ({proposals.filter((p) => p.status === 'voting').length})</span>
+            <span>{t.proposalsInVoting} ({proposals.filter((p) => p.status === 'voting').length})</span>
           </button>
 
           <button
@@ -139,7 +137,7 @@ export const PactTab: React.FC<PactTabProps> = ({
             }`}
           >
             <MessageSquareHeart className="w-4 h-4" />
-            <span>温和非暴力便签墙 ({reminders.length})</span>
+            <span>{t.gentleNotesBoard} ({reminders.length})</span>
           </button>
         </div>
       </div>
@@ -168,7 +166,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                           {pact.title}
                         </h3>
                         <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 font-medium">
-                          全员共识达标 ({signRate}%)
+                          {t.consensusReached} ({signRate}%)
                         </span>
                       </div>
                       <p className="text-xs sm:text-sm text-[#2C2218] dark:text-stone-200 mt-2 leading-relaxed">
@@ -176,7 +174,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                       </p>
                       {pact.penaltyOrNote && (
                         <p className="text-xs text-[#796B5B] dark:text-stone-300 bg-[#FAF7F2] dark:bg-stone-800/80 p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 mt-3">
-                          💬 制定背景与初心：{pact.penaltyOrNote}
+                          💬 {t.originBackground}{pact.penaltyOrNote}
                         </p>
                       )}
                     </div>
@@ -192,14 +190,14 @@ export const PactTab: React.FC<PactTabProps> = ({
                     }`}
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>{hasSigned ? '已签署同意' : '立即签署支持'}</span>
+                    <span>{hasSigned ? t.signedAgreed : t.signSupportNow}</span>
                   </button>
                 </div>
 
                 {/* Signees avatar list */}
                 <div className="mt-4 pt-3 border-t border-[#E8E1D5] dark:border-stone-700 flex flex-wrap items-center justify-between gap-2 text-xs text-[#796B5B] dark:text-stone-400">
                   <div className="flex items-center space-x-2">
-                    <span className="text-[#A89F91] dark:text-stone-500">已签署室友：</span>
+                    <span className="text-[#A89F91] dark:text-stone-500">{t.signedRoommates}</span>
                     <div className="flex items-center space-x-1.5">
                       {roommates.map((r) => {
                         const signed = pact.agreedBy.includes(r.id);
@@ -225,7 +223,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                     </div>
                   </div>
                   <span className="text-[11px] text-[#A89F91] dark:text-stone-500">
-                    生效基准日：{pact.createdAt}
+                    {t.effectiveDate}{pact.createdAt}
                   </span>
                 </div>
               </div>
@@ -239,7 +237,7 @@ export const PactTab: React.FC<PactTabProps> = ({
         <div className="space-y-4">
           {proposals.length === 0 ? (
             <div className="bg-white dark:bg-[#292524] rounded-2xl p-12 text-center border border-[#E8E1D5] dark:border-stone-700 text-stone-400 dark:text-stone-500 text-sm">
-              当前暂无正在投票中的提案，有新想法可随时点击右上角发起！
+              {t.noProposalsVoting}
             </div>
           ) : (
             proposals.map((prop) => {
@@ -256,10 +254,10 @@ export const PactTab: React.FC<PactTabProps> = ({
                     <div>
                       <div className="flex items-center space-x-2">
                         <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 font-semibold">
-                          民主公投中
+                          {t.democraticVoting}
                         </span>
                         <span className="text-xs text-[#796B5B] dark:text-stone-400 font-medium">
-                          类别：{prop.category}
+                          {t.categoryLabel}{prop.category}
                         </span>
                       </div>
                       <h3 className="font-bold text-[#2C2218] dark:text-stone-100 text-base mt-1.5">
@@ -269,7 +267,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                         {prop.description}
                       </p>
                       <div className="text-xs text-[#796B5B] dark:text-stone-400 mt-2">
-                        发起人：{creator?.name} · 发起时间：{prop.createdAt}
+                        {t.initiatedByPrefix}{creator?.name} · {t.initiatedTimePrefix}{prop.createdAt}
                       </div>
                     </div>
                   </div>
@@ -280,7 +278,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                       <div className="flex items-center space-x-1.5 text-emerald-700 dark:text-emerald-400">
                         <ThumbsUp className="w-4 h-4" />
                         <span>
-                          支持：<strong>{prop.votesFor.length}</strong> 人 (
+                          {t.supportLabel}<strong>{prop.votesFor.length}</strong> {t.votesUnit} (
                           {prop.votesFor
                             .map((id) => roommates.find((r) => r.id === id)?.name)
                             .join('、')}
@@ -290,7 +288,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                       {prop.votesAgainst.length > 0 && (
                         <div className="flex items-center space-x-1.5 text-[#796B5B] dark:text-stone-400">
                           <ThumbsDown className="w-4 h-4" />
-                          <span>反对：{prop.votesAgainst.length} 人</span>
+                          <span>{t.opposeLabel}{prop.votesAgainst.length} {t.votesUnit}</span>
                         </div>
                       )}
                     </div>
@@ -306,7 +304,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                         }`}
                       >
                         <ThumbsUp className="w-3.5 h-3.5" />
-                        <span>{myVotedFor ? '已投赞成' : '赞成并同意'}</span>
+                        <span>{myVotedFor ? t.votedAgree : t.voteAgree}</span>
                       </button>
 
                       <button
@@ -319,7 +317,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                         }`}
                       >
                         <ThumbsDown className="w-3.5 h-3.5" />
-                        <span>{myVotedAgainst ? '已投反对' : '暂有疑虑'}</span>
+                        <span>{myVotedAgainst ? t.votedAgainst : t.voteAgainst}</span>
                       </button>
                     </div>
                   </div>
@@ -336,10 +334,9 @@ export const PactTab: React.FC<PactTabProps> = ({
           <div className="bg-amber-50/70 dark:bg-amber-950/30 rounded-2xl p-4 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 leading-relaxed flex items-start space-x-2.5">
             <Smile className="w-4 h-4 text-amber-700 dark:text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <strong>为什么设置「温和非暴力便签墙」？</strong>
+              <strong>{t.whyGentleWallTitle}</strong>
               <p className="text-amber-800/90 dark:text-amber-300/80 mt-0.5">
-                刚毕业的合租生活难免有细小摩擦（如关门声、外放音乐、碎发残留）。面对面挑明容易让年轻室友感到尴尬，憋着又容易伤感情。
-                在这里你可以实名或匿名留下一张温和、真诚的暖心便签，互相包容，共同打造舒心的合租避风港！
+                {t.whyGentleWallDesc}
               </p>
             </div>
           </div>
@@ -348,6 +345,14 @@ export const PactTab: React.FC<PactTabProps> = ({
             {reminders.map((rem) => {
               const fromUser = rem.fromId ? roommates.find((r) => r.id === rem.fromId) : null;
               const hasLiked = rem.likes.includes(currentUserId);
+
+              const categoryBadge = rem.category === 'praise'
+                ? (lang === 'en' ? '💖 Praise & Thanks' : '💖 室友夸夸与感谢')
+                : rem.category === 'noise'
+                ? (lang === 'en' ? '🌙 Rest & Noise' : '🌙 作息关照')
+                : rem.category === 'supplies'
+                ? (lang === 'en' ? '📦 Supplies Request' : '📦 物资求助')
+                : (lang === 'en' ? '✨ Living Details' : '✨ 生活细节');
 
               return (
                 <div
@@ -370,24 +375,18 @@ export const PactTab: React.FC<PactTabProps> = ({
                               : 'bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300'
                           }`}
                         >
-                          {rem.category === 'praise'
-                            ? '💖 室友夸夸与感谢'
-                            : rem.category === 'noise'
-                            ? '🌙 作息关照'
-                            : rem.category === 'supplies'
-                            ? '📦 物资求助'
-                            : '✨ 生活细节'}
+                          {categoryBadge}
                         </span>
                         <span className="text-stone-400">·</span>
                         <span className="text-[#796B5B] dark:text-stone-400 font-medium">
-                          {rem.isAnonymous ? '某位体贴的匿名室友' : fromUser?.name}
+                          {rem.isAnonymous ? t.anonymousRoommate : fromUser?.name}
                         </span>
                       </div>
 
                       {rem.resolved ? (
                         <span className="text-[11px] text-[#796B5B] dark:text-stone-400 flex items-center space-x-1">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                          <span>已了解并调整</span>
+                          <span>{t.resolvedNoteBadge}</span>
                         </span>
                       ) : (
                         <button
@@ -395,7 +394,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                           onClick={() => onResolveReminder(rem.id)}
                           className="text-[11px] text-[#8B5E3C] dark:text-amber-400 hover:underline"
                         >
-                          标记已阅
+                          {t.markResolvedButton}
                         </button>
                       )}
                     </div>
@@ -418,7 +417,7 @@ export const PactTab: React.FC<PactTabProps> = ({
                       }`}
                     >
                       <Heart className={`w-3.5 h-3.5 ${hasLiked ? 'fill-rose-500 text-rose-500' : ''}`} />
-                      <span>比心 ({rem.likes.length})</span>
+                      <span>{t.heartReaction} ({rem.likes.length})</span>
                     </button>
                   </div>
                 </div>

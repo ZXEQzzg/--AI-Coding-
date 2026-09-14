@@ -406,7 +406,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 <div className="font-mono text-sm font-bold text-[#2C2218] dark:text-stone-100 truncate">
                   {houseInfo.electricMeterNumber}
                 </div>
-                <div className="text-[11px] text-[#A89F91] dark:text-stone-500 mt-1">国网App交费号</div>
+                <div className="text-[11px] text-[#A89F91] dark:text-stone-500 mt-1">
+                  {lang === 'en' ? 'National Grid App ID' : '国网App交费号'}
+                </div>
               </div>
 
               {/* Gas Meter */}
@@ -428,7 +430,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 <div className="font-mono text-sm font-bold text-[#2C2218] dark:text-stone-100 truncate">
                   {houseInfo.gasMeterNumber}
                 </div>
-                <div className="text-[11px] text-[#A89F91] dark:text-stone-500 mt-1">燃气表插卡编号</div>
+                <div className="text-[11px] text-[#A89F91] dark:text-stone-500 mt-1">
+                  {lang === 'en' ? 'Gas meter card ID' : '燃气表插卡编号'}
+                </div>
               </div>
 
               {/* Landlord Phone */}
@@ -465,13 +469,17 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 <span className="text-xs font-bold text-[#796B5B] dark:text-stone-400 uppercase tracking-wider">
                   {t.rentCoverage}
                 </span>
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">100% 齐缴</span>
+                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  {lang === 'en' ? '100% Collected' : '100% 齐缴'}
+                </span>
               </div>
               <div className="text-2xl font-bold text-[#2C2218] dark:text-[#F5F5F4]">
                 ¥{totalRent.toLocaleString()}
               </div>
               <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-1">
-                4间房租金全部分摊完毕，押金备付金池健全
+                {lang === 'en'
+                  ? 'All 4 rooms partitioned, reserve funds healthy'
+                  : '4间房租金全部分摊完毕，押金备付金池健全'}
               </p>
             </div>
 
@@ -484,10 +492,12 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 <span className="text-xs font-bold text-amber-600 dark:text-amber-400">{dutyRate}%</span>
               </div>
               <div className="text-2xl font-bold text-[#2C2218] dark:text-[#F5F5F4]">
-                {completedDutiesCount} / {duties.length} 次
+                {completedDutiesCount} / {duties.length} {lang === 'en' ? 'times' : '次'}
               </div>
               <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-1">
-                本周公共区域保洁打卡履行率优秀
+                {lang === 'en'
+                  ? 'Common area roster fulfillment rate is optimal this week'
+                  : '本周公共区域保洁打卡履行率优秀'}
               </p>
             </div>
 
@@ -497,15 +507,15 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 <span className="text-xs font-bold text-[#796B5B] dark:text-stone-400 uppercase tracking-wider">
                   {t.unsettledDebtsTotal}
                 </span>
-                <span className="text-xs font-bold text-stone-500">
-                  {unsettledExpenses.length} 笔待平账
+                <span className="text-xs font-bold text-stone-500 dark:text-stone-400">
+                  {unsettledExpenses.length} {lang === 'en' ? 'pending settlement' : '笔待平账'}
                 </span>
               </div>
               <div className="text-2xl font-bold text-[#8B5E3C] dark:text-amber-400">
                 ¥{unsettledTotalDebt.toFixed(2)}
               </div>
               <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-1">
-                累计公共开销支出 ¥{totalExpenseAmount.toFixed(2)}
+                {lang === 'en' ? 'Total shared expenses: ' : '累计公共开销支出 '}¥{totalExpenseAmount.toFixed(2)}
               </p>
             </div>
           </div>
@@ -519,7 +529,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
             <div>
               <h3 className="font-bold text-[#2C2218] dark:text-[#F5F5F4] text-base">{t.adminTabRooms}</h3>
               <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-0.5">
-                管理全屋卧室、面积、朝向配置及基准租金台账
+                {lang === 'en'
+                  ? 'Manage bedroom assets, area, layout, and baseline rent ledger'
+                  : '管理全屋卧室、面积、朝向配置及基准租金台账'}
               </p>
             </div>
 
@@ -549,7 +561,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                     required
                     value={newRoomName}
                     onChange={(e) => setNewRoomName(e.target.value)}
-                    placeholder="如: 次卧 D (带阳台)"
+                    placeholder={lang === 'en' ? 'e.g. Bedroom D (balcony)' : '如: 次卧 D (带阳台)'}
                     className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-900 text-[#2C2218] dark:text-stone-100"
                   />
                 </div>
@@ -579,13 +591,13 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
-                    朝向格局
+                    {lang === 'en' ? 'Orientation / Layout' : '朝向格局'}
                   </label>
                   <input
                     type="text"
                     value={newRoomOrientation}
                     onChange={(e) => setNewRoomOrientation(e.target.value)}
-                    placeholder="朝南/静音双层玻璃"
+                    placeholder={lang === 'en' ? 'South-facing / Double-glazed' : '朝南/静音双层玻璃'}
                     className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-900 text-[#2C2218] dark:text-stone-100"
                   />
                 </div>
@@ -593,13 +605,13 @@ export const AdminTab: React.FC<AdminTabProps> = ({
 
               <div>
                 <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
-                  {t.roomFeatures}（逗号分隔）
+                  {t.roomFeatures} ({lang === 'en' ? 'comma separated' : '逗号分隔'})
                 </label>
                 <input
                   type="text"
                   value={newRoomFeatures}
                   onChange={(e) => setNewRoomFeatures(e.target.value)}
-                  placeholder="独立卫浴, 1.8米大床, 全景飘窗..."
+                  placeholder={lang === 'en' ? 'Ensuite bath, King bed, Bay window...' : '独立卫浴, 1.8米大床, 全景飘窗...'}
                   className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-900 text-[#2C2218] dark:text-stone-100"
                 />
               </div>
@@ -638,7 +650,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                         <span>{room.name}</span>
                       </div>
                       <span className="text-xs font-bold text-[#8B5E3C] dark:text-amber-400">
-                        ¥{room.monthlyRent}/{t.yuan}
+                        ¥{room.monthlyRent}/{lang === 'en' ? 'mo' : t.yuan}
                       </span>
                     </div>
 
@@ -674,7 +686,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                           </span>
                         </>
                       ) : (
-                        <span className="text-stone-400 italic">暂空置未入住</span>
+                        <span className="text-stone-400 italic">
+                          {lang === 'en' ? 'Vacant / Unoccupied' : '暂空置未入住'}
+                        </span>
                       )}
                     </div>
 
@@ -700,7 +714,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
             <div>
               <h3 className="font-bold text-[#2C2218] dark:text-[#F5F5F4] text-base">{t.adminTabMembers}</h3>
               <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-0.5">
-                室友联络方式、房管管理员角色切换与入住档案
+                {lang === 'en'
+                  ? 'Roommate contact info, admin role toggles, and tenant records'
+                  : '室友联络方式、房管管理员角色切换与入住档案'}
               </p>
             </div>
 
@@ -730,13 +746,13 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                     required
                     value={newMemberName}
                     onChange={(e) => setNewMemberName(e.target.value)}
-                    placeholder="室友真实姓名"
+                    placeholder={lang === 'en' ? 'Roommate real name' : '室友真实姓名'}
                     className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-900 text-[#2C2218] dark:text-stone-100"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
-                    入住房间
+                    {lang === 'en' ? 'Assigned Room' : '入住房间'}
                   </label>
                   <input
                     type="text"
@@ -767,7 +783,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                     type="text"
                     value={newMemberJob}
                     onChange={(e) => setNewMemberJob(e.target.value)}
-                    placeholder="如: 前端工程师 · 24届校招"
+                    placeholder={lang === 'en' ? 'e.g. Frontend Engineer · Class of 2024' : '如: 前端工程师 · 24届校招'}
                     className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-900 text-[#2C2218] dark:text-stone-100"
                   />
                 </div>
@@ -779,7 +795,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                     type="text"
                     value={newMemberEmergency}
                     onChange={(e) => setNewMemberEmergency(e.target.value)}
-                    placeholder="如: 家人 (138-0000-0000)"
+                    placeholder={lang === 'en' ? 'e.g. Family (138-0000-0000)' : '如: 家人 (138-0000-0000)'}
                     className="w-full text-xs p-2 rounded-lg border border-[#E8E1D5] dark:border-stone-700 bg-white dark:bg-stone-900 text-[#2C2218] dark:text-stone-100"
                   />
                 </div>
@@ -809,8 +825,8 @@ export const AdminTab: React.FC<AdminTabProps> = ({
               <thead>
                 <tr className="border-b border-[#E8E1D5] dark:border-stone-700 text-[#796B5B] dark:text-stone-400 font-medium">
                   <th className="py-2.5 px-3">{t.memberName}</th>
-                  <th className="py-2.5 px-3">居住房间</th>
-                  <th className="py-2.5 px-3">月度租金基准</th>
+                  <th className="py-2.5 px-3">{lang === 'en' ? 'Assigned Room' : '居住房间'}</th>
+                  <th className="py-2.5 px-3">{lang === 'en' ? 'Monthly Base Rent' : '月度租金基准'}</th>
                   <th className="py-2.5 px-3">{t.roomDepositCol}</th>
                   <th className="py-2.5 px-3">{t.memberJob}</th>
                   <th className="py-2.5 px-3">{t.emergencyContactCol}</th>
@@ -853,7 +869,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                     </td>
                     <td className="py-3 px-3">
                       <span className="inline-flex items-center text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full text-[11px] border border-emerald-200 dark:border-emerald-800">
-                        <BadgeCheck className="w-3 h-3 mr-1" /> 已交 ¥{r.deposit}
+                        <BadgeCheck className="w-3 h-3 mr-1" /> {lang === 'en' ? 'Paid' : '已交'} ¥{r.deposit}
                       </span>
                     </td>
                     <td className="py-3 px-3 text-[#796B5B] dark:text-stone-300">
@@ -868,7 +884,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                         onClick={() => handleToggleAdminRole(r.id)}
                         className="text-[#8B5E3C] dark:text-amber-400 hover:text-[#724A2D] text-xs font-semibold hover:underline"
                       >
-                        {r.role === 'admin' ? '撤销房管权限' : '提升为房管'}
+                        {r.role === 'admin'
+                          ? (lang === 'en' ? 'Revoke Admin' : '撤销房管权限')
+                          : (lang === 'en' ? 'Promote to Admin' : '提升为房管')}
                       </button>
                     </td>
                   </tr>
@@ -892,10 +910,10 @@ export const AdminTab: React.FC<AdminTabProps> = ({
 
               <div className="space-y-3">
                 {[
-                  { label: '宽带网络与充值', amount: 360, color: 'bg-[#8B5E3C]' },
-                  { label: '夏季客厅与公区电费', amount: 360, color: 'bg-amber-600' },
-                  { label: '公区公共物资补给', amount: 128.5, color: 'bg-stone-600' },
-                  { label: '维修五金备品', amount: 65, color: 'bg-emerald-600' },
+                  { label: lang === 'en' ? 'Broadband & Network' : '宽带网络与充值', amount: 360, color: 'bg-[#8B5E3C]' },
+                  { label: lang === 'en' ? 'Summer AC & Common Power' : '夏季客厅与公区电费', amount: 360, color: 'bg-amber-600' },
+                  { label: lang === 'en' ? 'Common Supplies Restock' : '公区公共物资补给', amount: 128.5, color: 'bg-stone-600' },
+                  { label: lang === 'en' ? 'Hardware & Maintenance' : '维修五金备品', amount: 65, color: 'bg-emerald-600' },
                 ].map((item, idx) => {
                   const percent = Math.round((item.amount / totalExpenseAmount) * 100) || 25;
                   return (
@@ -929,10 +947,10 @@ export const AdminTab: React.FC<AdminTabProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { name: '厨房与灶台', count: 12, rate: '100%' },
-                  { name: '公卫与淋浴间', count: 14, rate: '95%' },
-                  { name: '客厅与玄关', count: 8, rate: '92%' },
-                  { name: '生活阳台与垃圾', count: 10, rate: '98%' },
+                  { name: lang === 'en' ? 'Kitchen & Stove' : '厨房与灶台', count: 12, rate: '100%' },
+                  { name: lang === 'en' ? 'Common Bath & Shower' : '公卫与淋浴间', count: 14, rate: '95%' },
+                  { name: lang === 'en' ? 'Living Room & Entryway' : '客厅与玄关', count: 8, rate: '92%' },
+                  { name: lang === 'en' ? 'Utility Balcony & Trash' : '生活阳台与垃圾', count: 10, rate: '98%' },
                 ].map((zone, idx) => (
                   <div
                     key={idx}
@@ -940,10 +958,10 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                   >
                     <div className="text-xs text-[#796B5B] dark:text-stone-400">{zone.name}</div>
                     <div className="text-lg font-bold text-[#2C2218] dark:text-stone-100 mt-1">
-                      {zone.count} 次已结
+                      {zone.count} {lang === 'en' ? 'settled' : '次已结'}
                     </div>
                     <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
-                      履约率: {zone.rate}
+                      {lang === 'en' ? 'Rate' : '履约率'}: {zone.rate}
                     </div>
                   </div>
                 ))}
@@ -959,7 +977,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
           <div>
             <h3 className="font-bold text-[#2C2218] dark:text-[#F5F5F4] text-base">{t.adminTabAnnouncement}</h3>
             <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-0.5">
-              置顶广播通知将展示在每位室友首页首屏，适用于安检、交租与重要通知
+              {lang === 'en'
+                ? 'Pinned announcement will appear at the top banner of all roommates home screen'
+                : '置顶广播通知将展示在每位室友首页首屏，适用于安检、交租与重要通知'}
             </p>
           </div>
 
@@ -973,7 +993,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 required
                 value={announcementTitle}
                 onChange={(e) => setAnnouncementTitle(e.target.value)}
-                placeholder="例如: 9月15日燃气公司上门检修..."
+                placeholder={lang === 'en' ? 'e.g. Sept 15 Gas company safety check...' : '例如: 9月15日燃气公司上门检修...'}
                 className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               />
             </div>
@@ -987,7 +1007,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 required
                 value={announcementContent}
                 onChange={(e) => setAnnouncementContent(e.target.value)}
-                placeholder="详细说明与室友配合要求..."
+                placeholder={lang === 'en' ? 'Detailed instructions and roommate cooperation requirements...' : '详细说明与室友配合要求...'}
                 className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               />
             </div>
@@ -1012,7 +1032,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                 </span>
               ) : (
                 <span className="text-xs text-[#A89F91] dark:text-stone-500">
-                  最后发布：{houseInfo.announcement.updatedAt}
+                  {lang === 'en' ? 'Last published: ' : '最后发布：'}{houseInfo.announcement.updatedAt}
                 </span>
               )}
 
@@ -1035,7 +1055,9 @@ export const AdminTab: React.FC<AdminTabProps> = ({
             <div>
               <h3 className="font-bold text-[#2C2218] dark:text-[#F5F5F4] text-base">{t.adminTabAudit}</h3>
               <p className="text-xs text-[#796B5B] dark:text-stone-400 mt-0.5">
-                记录全屋开销记账、结清还款、值日打卡与公约背书全量操作
+                {lang === 'en'
+                  ? 'Full audit log of shared expenses, repayments, cleaning check-ins, and pact endorsements'
+                  : '记录全屋开销记账、结清还款、值日打卡与公约背书全量操作'}
               </p>
             </div>
 
@@ -1054,12 +1076,12 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                   {fKey === 'all'
                     ? t.filterAll
                     : fKey === 'expense'
-                    ? '费用'
+                    ? (lang === 'en' ? 'Expenses' : '费用')
                     : fKey === 'duty'
-                    ? '清洁'
+                    ? (lang === 'en' ? 'Cleaning' : '清洁')
                     : fKey === 'pact'
-                    ? '公约'
-                    : '管理'}
+                    ? (lang === 'en' ? 'Pacts' : '公约')
+                    : (lang === 'en' ? 'Admin' : '管理')}
                 </button>
               ))}
             </div>
@@ -1078,7 +1100,7 @@ export const AdminTab: React.FC<AdminTabProps> = ({
                     />
                     <div>
                       <div className="font-semibold text-[#2C2218] dark:text-stone-200">
-                        {operator?.name || '管理员'} · {log.action}
+                        {operator?.name || (lang === 'en' ? 'Admin' : '管理员')} · {log.action}
                       </div>
                       <div className="text-[#796B5B] dark:text-stone-400 mt-0.5">{log.details}</div>
                     </div>

@@ -667,7 +667,7 @@ export default function App() {
   const unsettledDebtsCount = simplifiedDebts.length;
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#1C1917] text-[#2C2218] dark:text-[#F5F5F4] font-sans pb-16 transition-colors selection:bg-[#E8DDCB] dark:selection:bg-stone-700">
+    <div className={`min-h-screen ${isDarkMode ? 'dark' : ''} bg-[#FDFBF7] dark:bg-[#1C1917] text-[#2C2218] dark:text-[#F5F5F4] font-sans pb-16 transition-colors selection:bg-[#E8DDCB] dark:selection:bg-stone-700`}>
       {/* Header */}
       <Header
         houseInfo={houseInfo}
@@ -698,6 +698,7 @@ export default function App() {
             supplies={supplies}
             proposals={proposals}
             reminders={reminders}
+            lang={lang}
             onNavigateTab={setActiveTab}
             onOpenAddExpense={() => {
               setExpensePrefill(undefined);
@@ -716,6 +717,7 @@ export default function App() {
             roommates={roommates}
             expenses={expenses}
             currentUserId={currentUserId}
+            lang={lang}
             onOpenAddExpense={() => {
               setExpensePrefill(undefined);
               setIsAddExpenseOpen(true);
@@ -731,6 +733,7 @@ export default function App() {
             roommates={roommates}
             duties={duties}
             currentUserId={currentUserId}
+            lang={lang}
             onToggleDutyItem={handleToggleDutyItem}
             onCompleteDuty={handleCompleteDuty}
             onRequestSwap={handleOpenSwapModal}
@@ -744,6 +747,7 @@ export default function App() {
             roommates={roommates}
             supplies={supplies}
             currentUserId={currentUserId}
+            lang={lang}
             onOpenAddSupply={() => setIsAddSupplyOpen(true)}
             onUpdateStockLevel={handleUpdateStockLevel}
             onInitiateRestock={handleInitiateRestock}
@@ -758,6 +762,7 @@ export default function App() {
             proposals={proposals}
             reminders={reminders}
             currentUserId={currentUserId}
+            lang={lang}
             onOpenNewProposal={() => setIsNewProposalOpen(true)}
             onOpenPostReminder={() => setIsPostReminderOpen(true)}
             onVoteProposal={handleVoteProposal}
@@ -810,6 +815,7 @@ export default function App() {
         }}
         roommates={roommates}
         currentUserId={currentUserId}
+        lang={lang}
         onAddExpense={handleAddExpense}
         prefill={expensePrefill}
       />
@@ -819,6 +825,7 @@ export default function App() {
         onClose={() => setIsAddSupplyOpen(false)}
         roommates={roommates}
         currentUserId={currentUserId}
+        lang={lang}
         onAddSupply={handleAddSupply}
       />
 
@@ -827,6 +834,7 @@ export default function App() {
         onClose={() => setIsNewProposalOpen(false)}
         roommates={roommates}
         currentUserId={currentUserId}
+        lang={lang}
         onAddProposal={handleAddProposal}
       />
 
@@ -839,6 +847,7 @@ export default function App() {
         duty={selectedSwapDuty}
         roommates={roommates}
         currentUserId={currentUserId}
+        lang={lang}
         onSubmitSwap={handleSubmitSwap}
       />
 
@@ -847,6 +856,7 @@ export default function App() {
         onClose={() => setIsPostReminderOpen(false)}
         roommates={roommates}
         currentUserId={currentUserId}
+        lang={lang}
         onAddReminder={handleAddReminder}
       />
     </div>

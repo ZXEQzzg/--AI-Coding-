@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Roommate, ExpenseCategory, SplitMethod, ExpenseRecord } from '../types';
-import { X, DollarSign, Users, Home, Sparkles } from 'lucide-react';
+import { Language, i18n, formatExpenseCategory } from '../utils/i18n';
+import { X, DollarSign, Users, Home } from 'lucide-react';
 
 interface AddExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
   roommates: Roommate[];
   currentUserId: string;
+  lang: Language;
   onAddExpense: (expense: Omit<ExpenseRecord, 'id' | 'createdAt' | 'isFullySettled'>) => void;
   prefill?: {
     title?: string;
@@ -21,10 +23,13 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   onClose,
   roommates,
   currentUserId,
+  lang,
   onAddExpense,
   prefill,
 }) => {
   if (!isOpen) return null;
+
+  const t = i18n[lang];
 
   const [title, setTitle] = useState(prefill?.title || '');
   const [amount, setAmount] = useState(prefill?.amount ? String(prefill.amount) : '');
@@ -99,19 +104,19 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-xs">
-      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between pb-4 border-b border-stone-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
+      <div className="bg-white dark:bg-[#292524] rounded-2xl max-w-lg w-full p-6 shadow-xl border border-[#E8E1D5] dark:border-stone-700 animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E8E1D5] dark:border-stone-700">
           <div className="flex items-center space-x-2">
-            <span className="p-2 rounded-xl bg-stone-100 text-stone-900">
+            <span className="p-2 rounded-xl bg-[#FAF7F2] dark:bg-stone-800 text-[#8B5E3C] dark:text-amber-400">
               <DollarSign className="w-5 h-5" />
             </span>
-            <h3 className="text-base font-bold text-stone-900">录入合租公共开销</h3>
+            <h3 className="text-base font-bold text-[#2C2218] dark:text-[#F5F5F4]">{t.addExpenseModalTitle}</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100"
+            className="p-1 rounded-lg text-[#796B5B] dark:text-stone-400 hover:text-[#2C2218] dark:hover:text-stone-100 hover:bg-[#FAF7F2] dark:hover:bg-stone-800"
           >
             <X className="w-5 h-5" />
           </button>
@@ -119,26 +124,26 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              支出项目名称 *
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.expenseTitleLabel}
             </label>
             <input
               type="text"
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="例：9月公共电费充值、立白洗洁精+卷纸..."
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+              placeholder={t.expenseTitlePlaceholder}
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                总金额 (元) *
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.amountLabel}
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs font-bold">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A89F91] dark:text-stone-500 text-xs font-bold">
                   ¥
                 </span>
                 <input
@@ -149,40 +154,40 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full pl-7 pr-3 py-2.5 text-xs font-bold rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+                  className="w-full pl-7 pr-3 py-2.5 text-xs font-bold rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                费用类型
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.expenseCategoryLabel}
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
-                className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+                className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               >
-                <option value="electricity">公区电费</option>
-                <option value="water_gas">水费/燃气</option>
-                <option value="internet">合租宽带</option>
-                <option value="supplies">公共日用消耗品</option>
-                <option value="rent">房屋租金</option>
-                <option value="maintenance">维修五金</option>
-                <option value="other">其他杂项</option>
+                <option value="electricity">{formatExpenseCategory('electricity', lang)}</option>
+                <option value="water_gas">{formatExpenseCategory('water_gas', lang)}</option>
+                <option value="internet">{formatExpenseCategory('internet', lang)}</option>
+                <option value="supplies">{formatExpenseCategory('supplies', lang)}</option>
+                <option value="rent">{formatExpenseCategory('rent', lang)}</option>
+                <option value="maintenance">{formatExpenseCategory('maintenance', lang)}</option>
+                <option value="other">{formatExpenseCategory('other', lang)}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                谁垫付的这笔钱？
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.whoPaidLabel}
               </label>
               <select
                 value={payerId}
                 onChange={(e) => setPayerId(e.target.value)}
-                className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+                className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               >
                 {roommates.map((r) => (
                   <option key={r.id} value={r.id}>
@@ -193,22 +198,22 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-stone-700 mb-1">
-                消费日期
+              <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+                {t.expenseDateLabel}
               </label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full text-xs p-2 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+                className="w-full text-xs p-2 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
               />
             </div>
           </div>
 
           {/* Split Method Toggle */}
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1.5">
-              分摊计算规则
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1.5">
+              {t.splitRuleLabel}
             </label>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -216,15 +221,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 onClick={() => setSplitMethod('equal')}
                 className={`p-2.5 rounded-xl border text-xs font-medium text-left flex items-center space-x-2 transition-colors ${
                   splitMethod === 'equal'
-                    ? 'bg-stone-900 text-white border-stone-900'
-                    : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
+                    ? 'bg-[#8B5E3C] text-white border-[#8B5E3C]'
+                    : 'bg-[#FAF7F2] dark:bg-stone-800 text-[#796B5B] dark:text-stone-300 border-[#E8E1D5] dark:border-stone-700 hover:bg-[#F4EFE6]'
                 }`}
               >
                 <Users className="w-4 h-4 shrink-0" />
                 <div>
-                  <div className="font-semibold">人人均摊</div>
-                  <div className={`text-[10px] ${splitMethod === 'equal' ? 'text-stone-300' : 'text-stone-400'}`}>
-                    选定室友平分总额
+                  <div className="font-semibold">{t.equalSplitTitle}</div>
+                  <div className={`text-[10px] ${splitMethod === 'equal' ? 'text-amber-100' : 'text-[#A89F91] dark:text-stone-500'}`}>
+                    {t.equalSplitDesc}
                   </div>
                 </div>
               </button>
@@ -234,15 +239,15 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 onClick={() => setSplitMethod('by_area')}
                 className={`p-2.5 rounded-xl border text-xs font-medium text-left flex items-center space-x-2 transition-colors ${
                   splitMethod === 'by_area'
-                    ? 'bg-stone-900 text-white border-stone-900'
-                    : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
+                    ? 'bg-[#8B5E3C] text-white border-[#8B5E3C]'
+                    : 'bg-[#FAF7F2] dark:bg-stone-800 text-[#796B5B] dark:text-stone-300 border-[#E8E1D5] dark:border-stone-700 hover:bg-[#F4EFE6]'
                 }`}
               >
                 <Home className="w-4 h-4 shrink-0" />
                 <div>
-                  <div className="font-semibold">按房间面积分摊</div>
-                  <div className={`text-[10px] ${splitMethod === 'by_area' ? 'text-stone-300' : 'text-stone-400'}`}>
-                    适合主次卧房租或大功率暖气
+                  <div className="font-semibold">{t.areaSplitTitle}</div>
+                  <div className={`text-[10px] ${splitMethod === 'by_area' ? 'text-amber-100' : 'text-[#A89F91] dark:text-stone-500'}`}>
+                    {t.areaSplitDesc}
                   </div>
                 </div>
               </button>
@@ -251,8 +256,8 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
           {/* Participants */}
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1.5">
-              参与分摊的室友 ({selectedParticipants.length}人参与)
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1.5">
+              {t.participantsLabel} ({selectedParticipants.length} {t.participantsCount})
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {roommates.map((r) => {
@@ -264,8 +269,8 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     onClick={() => toggleParticipant(r.id)}
                     className={`p-2 rounded-xl border text-xs flex items-center space-x-1.5 transition-all ${
                       isSelected
-                        ? 'bg-stone-100 border-stone-400 font-semibold text-stone-900'
-                        : 'bg-white border-stone-200 text-stone-400 opacity-60'
+                        ? 'bg-[#EFE8DC] dark:bg-stone-800 border-[#8B5E3C] dark:border-amber-500 font-semibold text-[#2C2218] dark:text-stone-100'
+                        : 'bg-white dark:bg-stone-900 border-[#E8E1D5] dark:border-stone-800 text-[#A89F91] dark:text-stone-500 opacity-60'
                     }`}
                   >
                     <img
@@ -281,32 +286,32 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-700 mb-1">
-              备注或采购说明（选填）
+            <label className="block text-xs font-medium text-[#796B5B] dark:text-stone-300 mb-1">
+              {t.notesOptionalLabel}
             </label>
             <input
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="例：山姆超市实付凭证已存在微信群相册..."
-              className="w-full text-xs p-2.5 rounded-xl border border-stone-200 bg-stone-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-stone-400"
+              placeholder={t.notesOptionalPlaceholder}
+              className="w-full text-xs p-2.5 rounded-xl border border-[#E8E1D5] dark:border-stone-700 bg-[#FAF7F2] dark:bg-stone-900 text-[#2C2218] dark:text-stone-100 focus:outline-hidden focus:border-[#8B5E3C]"
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-4 border-t border-stone-100">
+          <div className="flex items-center justify-end space-x-2 pt-4 border-t border-[#E8E1D5] dark:border-stone-700">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-stone-200 text-xs font-medium text-stone-600 hover:bg-stone-50"
+              className="px-4 py-2 rounded-xl border border-[#E8E1D5] dark:border-stone-700 text-xs font-medium text-[#796B5B] dark:text-stone-300 hover:bg-[#FAF7F2] dark:hover:bg-stone-800"
             >
-              取消
+              {t.cancel}
             </button>
             <button
               type="submit"
               id="submit-expense-btn"
-              className="px-5 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold shadow-xs"
+              className="px-5 py-2 rounded-xl bg-[#8B5E3C] hover:bg-[#724A2D] text-white text-xs font-semibold shadow-xs"
             >
-              确认生成AA账单
+              {t.submitExpenseBtn}
             </button>
           </div>
         </form>
